@@ -1,36 +1,270 @@
 {
   "name": "DB2 SQL",
   "scopeName": "source.db2",
+  "fileTypes": ["db2"],
   "patterns": [
-    {"include": "#comments"},
-    {"include": "#strings"},
-    {"include": "#numbers"},
-    {"include": "#keywords"},
-    {"include": "#types"},
-    {"include": "#functions"},
-    {"include": "#special"},
-    {"include": "#operators"}
+    { "include": "#shebang" },
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#quotedIdentifiers" },
+    { "include": "#parameters" },
+    { "include": "#variables" },
+    { "include": "#numbers" },
+    { "include": "#labels" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#builtins" },
+    { "include": "#functions" },
+    { "include": "#special" },
+    { "include": "#clauses" },
+    { "include": "#operators" }
   ],
   "repository": {
-    "comments": {"patterns": [
-      {"name": "comment.line.double-dash.db2", "match": "--.*$"},
-      {"name": "comment.block.db2", "begin": "/\\*", "end": "\\*/"}
-    ]},
-    "strings": {"patterns": [
-      {"name": "string.quoted.single.db2", "begin": "'", "end": "'", "patterns": [{"name": "constant.character.escape.db2", "match": "''"}]},
-      {"name": "string.quoted.double.db2", "begin": "\\\"", "end": "\\\""}
-    ]},
-    "numbers": {"patterns": [{"name": "constant.numeric.db2", "match": "\\b\\d+(\\.\\d+)?\\b"}]},
-    "keywords": {"patterns": [
-      {"name": "keyword.control.db2", "match": "\\b(?i:SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|DELETE|MERGE|CREATE|ALTER|DROP|TRUNCATE|TABLE|VIEW|INDEX|PROCEDURE|FUNCTION|TRIGGER|WITH|AS|CASE|WHEN|THEN|ELSE|END|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|CROSS|ON|GROUP|BY|ORDER|HAVING|UNION|ALL|DISTINCT|FETCH|FIRST|ROWS|ONLY|OFFSET|DECLARE|SET|CALL|RETURN|BEGIN|ATOMIC|COMMIT|ROLLBACK|GRANT|REVOKE)\\b"},
-      {"name": "keyword.operator.db2", "match": "\\b(?i:AND|OR|NOT|IN|IS|NULL|LIKE|BETWEEN|EXISTS|ASC|DESC)\\b"}
-    ]},
-    "types": {"patterns": [{"name": "storage.type.db2", "match": "\\b(?i:CHAR|VARCHAR|CLOB|BLOB|DECIMAL|NUMERIC|INTEGER|INT|BIGINT|SMALLINT|DATE|TIME|TIMESTAMP|REAL|DOUBLE|FLOAT|BOOLEAN|GRAPHIC|VARGRAPHIC|XML)\\b"}]},
-    "functions": {"patterns": [{"name": "support.function.db2", "match": "\\b(?i:COALESCE|NULLIF|CAST|DECIMAL|VARCHAR|CHAR|SUBSTR|SUBSTRING|TRIM|REPLACE|UPPER|LOWER|LENGTH|COUNT|SUM|AVG|MIN|MAX|ROW_NUMBER|RANK|DENSE_RANK|REGEXP_LIKE|REGEXP_REPLACE|VARCHAR_FORMAT|TIMESTAMP_FORMAT|DAYS|MONTHS|YEARS)\\b(?=\\s*\\()"}]},
-    "special": {"patterns": [
-      {"name": "constant.language.db2", "match": "\\b(?i:CURRENT_DATE|CURRENT_TIME|CURRENT_TIMESTAMP|CURRENT_USER|CURRENT_SCHEMA|CURRENT_PATH|CURRENT_SERVER|CURRENT_TIMEZONE|CURRENT_ROLE)\\b"},
-      {"name": "keyword.other.db2", "match": "\\b(?i:WITH\\s+UR|WITH\\s+CS|WITH\\s+RS|WITH\\s+RR|FETCH\\s+FIRST|OPTIMIZE\\s+FOR|DECLARE\\s+GLOBAL\\s+TEMPORARY|TEMPORARY|GENERATED\\s+(?:ALWAYS|BY\\s+DEFAULT)|IDENTITY|SIGNAL|RESIGNAL|GET\\s+DIAGNOSTICS|SQLCODE|SQLSTATE)\\b"}
-    ]},
-    "operators": {"patterns": [{"name": "keyword.operator.logical.db2", "match": "=|<>|!=|<=|>=|<|>|\\+|-|\\*|/|\\|\\|"}]}
+    "shebang": {
+      "patterns": [
+        { "name": "comment.line.shebang.db2", "match": "^#!.*$" }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        { "name": "comment.line.double-dash.db2", "match": "--.*$" },
+        { "name": "comment.block.db2", "begin": "/\\*", "end": "\\*/" }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.db2",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "name": "constant.character.escape.db2", "match": "''" }
+          ]
+        },
+        {
+          "name": "string.quoted.double.db2",
+          "begin": "\\\"",
+          "end": "\\\"",
+          "patterns": [
+            { "name": "constant.character.escape.db2", "match": "\\\"\\\"" }
+          ]
+        },
+        {
+          "name": "string.quoted.hex.db2",
+          "match": "\\b(?i:X)'[0-9A-F]*'"
+        },
+        {
+          "name": "string.quoted.hex.db2",
+          "match": "\\b(?i:GX)'[0-9A-F]*'"
+        }
+      ]
+    },
+    "quotedIdentifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.object.quoted.db2",
+          "begin": "\\\"",
+          "end": "\\\"",
+          "patterns": [
+            { "name": "constant.character.escape.db2", "match": "\\\"\\\"" }
+          ]
+        }
+      ]
+    },
+    "parameters": {
+      "patterns": [
+        { "name": "variable.parameter.db2", "match": "\\?[0-9]*" },
+        { "name": "variable.parameter.db2", "match": "(?<!\\w):[A-Za-z_][A-Za-z0-9_$#@]*" }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        { "name": "variable.other.db2", "match": "(?<![A-Za-z0-9_$#@])[A-Za-z_$#@][A-Za-z0-9_$#@]*\\b" },
+        { "name": "variable.language.db2", "match": "\\b(?i:SQLCODE|SQLSTATE|SQLWARN[0-9]|ROW_COUNT|IDENTITY_VAL_LOCAL)\\b" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.db2", "match": "(?<![A-Za-z0-9_])[-+]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[Ee][-+]?\\d+)?(?![A-Za-z0-9_])" },
+        { "name": "constant.numeric.hex.db2", "match": "\\b0[xX][0-9A-Fa-f]+\\b" }
+      ]
+    },
+    "labels": {
+      "patterns": [
+        { "name": "entity.name.label.db2", "match": "(?m)^\\s*[A-Za-z_][A-Za-z0-9_$#@]*\\s*:\\s*(?=(?:BEGIN|LOOP|FOR|WHILE|REPEAT|IF|CASE)\\b)" }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.db2",
+          "match": "\\b(?i:SELECT|INSERT|UPDATE|DELETE|MERGE|VALUES|WITH|FROM|WHERE|INTO|SET|AS|CASE|WHEN|THEN|ELSE|END|IF|ELSEIF|LOOP|WHILE|REPEAT|FOR|DO|LEAVE|ITERATE|RETURN|GOTO|BEGIN|ATOMIC|CONTINUE|UNDO|DECLARE|OPEN|FETCH|CLOSE|CALL|SIGNAL|RESIGNAL|GET|DIAGNOSTICS|COMMIT|ROLLBACK|SAVEPOINT|RELEASE|CONNECT|DISCONNECT|PREPARE|EXECUTE|IMMEDIATE|GRANT|REVOKE|LOCK|UNLOCK|COMMENT|EXPLAIN|VALUES|TABLE|VALUES|DEFAULT)\\b"
+        },
+        {
+          "name": "keyword.other.db2",
+          "match": "\\b(?i:CREATE|ALTER|DROP|TRUNCATE|RENAME|REORG|RUNSTATS|IMPORT|EXPORT|LOAD|ARCHIVE|RECOVER|BACKUP|RESTORE|REPLACE|REFRESH|REVALIDATE)\\b"
+        },
+        {
+          "name": "keyword.other.ddl.db2",
+          "match": "\\b(?i:TABLE|VIEW|INDEX|ALIAS|SYNONYM|SEQUENCE|NICKNAME|TYPE|DISTINCT|ARRAY|ROW|CURSOR|PROCEDURE|FUNCTION|METHOD|TRIGGER|MODULE|PACKAGE|VARIABLE|GLOBAL|TEMPORARY|HISTORY|PERIOD|ROLE|SCHEMA|DATABASE|TABLESPACE|BUFFERPOOL|STOGROUP|SERVER|WRAPPER|USER|CONSTRAINT|PRIMARY|KEY|FOREIGN|REFERENCES|UNIQUE|CHECK|EXCLUDE)\\b"
+        },
+        {
+          "name": "keyword.operator.db2",
+          "match": "\\b(?i:AND|OR|NOT|IN|IS|NULL|LIKE|ESCAPE|BETWEEN|EXISTS|SOME|ANY|ALL|UNIQUE|DISTINCT|OVER|PARTITION|ASC|DESC|NULLS|FIRST|LAST)\\b"
+        },
+        {
+          "name": "keyword.control.transaction.db2",
+          "match": "\\b(?i:COMMIT|ROLLBACK|SAVEPOINT|RELEASE)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.db2",
+          "match": "\\b(?i:CHAR|CHARACTER|VARCHAR|VARCHAR2|CLOB|DBCLOB|BLOB|GRAPHIC|VARGRAPHIC|LONG\\s+VARCHAR|LONG\\s+VARGRAPHIC|DECIMAL|DEC|NUMERIC|DECFLOAT|INTEGER|INT|BIGINT|SMALLINT|REAL|DOUBLE|DOUBLE\\s+PRECISION|FLOAT|BOOLEAN|DATE|TIME|TIMESTAMP|TIMESTAMP_WITH_TIME_ZONE|XML|ROWID|BINARY|VARBINARY|JSON)\\b"
+        },
+        {
+          "name": "storage.modifier.db2",
+          "match": "\\b(?i:FOR\\s+BIT\\s+DATA|NOT\\s+NULL|WITH\\s+DEFAULT|GENERATED|ALWAYS|BY\\s+DEFAULT|IDENTITY|HIDDEN|INLINE\\s+LENGTH|CCSID|CODEUNITS32|OCTETS|CODEUNITS16)\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.constant.db2",
+          "match": "\\b(?i:CURRENT_DATE|CURRENT_TIME|CURRENT_TIMESTAMP|CURRENT_USER|CURRENT_SCHEMA|CURRENT_SERVER|CURRENT_ROLE|CURRENT_PATH|CURRENT_PACKAGE_PATH|CURRENT_CLIENT_APPLNAME|CURRENT_CLIENT_USERID|CURRENT_CLIENT_WRKSTNNAME|CURRENT_CLIENT_ACCTNG|CURRENT_TIMEZONE|CURRENT_DECFLOAT_ROUNDING_MODE|CURRENT_OPTIMIZATION_PROFILE|CURRENT_QUERY_OPTIMIZATION|CURRENT_MAINTAINED_TABLE_TYPES|CURRENT TEMPORAL SYSTEM_TIME|CURRENT TEMPORAL BUSINESS_TIME)\\b"
+        },
+        {
+          "name": "constant.language.db2",
+          "match": "\\b(?i:TRUE|FALSE|UNKNOWN|DEFAULT)\\b"
+        },
+        {
+          "name": "support.type.db2",
+          "match": "\\b(?i:SQLTYPE|SQLSTATE|SQLCODE|DB2GENERAL|DB2SQL|SQLJ|JAVA|PARAMETER|RESULT)\\b"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "support.function.aggregate.db2",
+          "match": "\\b(?i:COUNT|SUM|AVG|MIN|MAX|STDDEV|STDDEV_SAMP|STDDEV_POP|VAR|VARIANCE|VAR_SAMP|VAR_POP|CORR|COVAR_POP|COVAR_SAMP|REGR_SLOPE|REGR_INTERCEPT|REGR_R2|LISTAGG|MEDIAN|PERCENTILE_CONT|PERCENTILE_DISC)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.window.db2",
+          "match": "\\b(?i:ROW_NUMBER|RANK|DENSE_RANK|NTILE|LEAD|LAG|FIRST_VALUE|LAST_VALUE|NTH_VALUE|PERCENT_RANK|CUME_DIST)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.string.db2",
+          "match": "\\b(?i:CHAR|VARCHAR|GRAPHIC|VARGRAPHIC|CLOB|DBCLOB|SUBSTR|SUBSTRING|LEFT|RIGHT|TRIM|LTRIM|RTRIM|REPLACE|TRANSLATE|UPPER|LOWER|INITCAP|LENGTH|CHAR_LENGTH|CHARACTER_LENGTH|OCTET_LENGTH|POSSTR|LOCATE|INSTR|LPAD|RPAD|REPEAT|REVERSE|CONCAT|REGEXP_LIKE|REGEXP_REPLACE|REGEXP_SUBSTR|REGEXP_COUNT|SOUNDEX)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.numeric.db2",
+          "match": "\\b(?i:ABS|CEILING|CEIL|FLOOR|MOD|POWER|POW|SQRT|EXP|LN|LOG|LOG10|RAND|ROUND|TRUNC|TRUNCATE|SIGN|DEGREES|RADIANS|PI|SIN|COS|TAN|ASIN|ACOS|ATAN|ATAN2)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.datetime.db2",
+          "match": "\\b(?i:DAYS|MONTHS_BETWEEN|MONTHS|YEARS|MIDNIGHT_SECONDS|DAY|DAYOFMONTH|DAYOFWEEK|DAYOFYEAR|MONTH|QUARTER|WEEK|WEEK_ISO|YEAR|HOUR|MINUTE|SECOND|MICROSECOND|DATE|TIME|TIMESTAMP|TIMESTAMP_FORMAT|VARCHAR_FORMAT|TO_DATE|TO_CHAR|ADD_MONTHS|NEXT_DAY|LAST_DAY)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.null.db2",
+          "match": "\\b(?i:COALESCE|NULLIF|NVL|NVL2|VALUE|IFNULL)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.conversion.db2",
+          "match": "\\b(?i:CAST|DECIMAL|DOUBLE|INTEGER|BIGINT|SMALLINT|REAL|FLOAT|DECFLOAT|DIGITS|HEX|VARCHAR|CHAR)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.xml.db2",
+          "match": "\\b(?i:XMLPARSE|XMLSERIALIZE|XMLCAST|XMLELEMENT|XMLFOREST|XMLCONCAT|XMLDOCUMENT|XMLQUERY|XMLTABLE|XMLVALIDATE|XMLTEXT|XMLPIATTR)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.json.db2",
+          "match": "\\b(?i:JSON_OBJECT|JSON_ARRAY|JSON_OBJECTAGG|JSON_ARRAYAGG|JSON_VALUE|JSON_QUERY|JSON_EXISTS|JSON_TYPE|JSON_VALID)\\b(?=\\s*\\()"
+        },
+        {
+          "name": "support.function.system.db2",
+          "match": "\\b(?i:IDENTITY_VAL_LOCAL|GENERATE_UNIQUE|RID|RID_BIT|HASH4|HASH8|HASH16|HASH20|ENCRYPT_TDES|DECRYPT_BIT|DECRYPT_CHAR|GREATEST|LEAST|DECFLOAT)\\b(?=\\s*\\()"
+        }
+      ]
+    },
+    "special": {
+      "patterns": [
+        {
+          "name": "keyword.other.isolation.db2",
+          "match": "\\b(?i:WITH\\s+(?:UR|CS|RS|RR)|USE\\s+AND\\s+KEEP(?:\s+UPDATE|\s+SHARE|\s+EXCLUSIVE)?\\s+LOCKS|CURRENTLY\\s+COMMITTED|SKIP\\s+LOCKED\\s+DATA|WAITFOR\\s+OUTCOME)\\b"
+        },
+        {
+          "name": "keyword.other.fetch.db2",
+          "match": "\\b(?i:FETCH\\s+FIRST\\s+\\d+\\s+ROWS?\\s+ONLY|FETCH\\s+NEXT|OFFSET\\s+\\d+\\s+ROWS?|OPTIMIZE\\s+FOR\\s+\\d+\\s+ROWS?)\\b"
+        },
+        {
+          "name": "keyword.other.temporal.db2",
+          "match": "\\b(?i:FOR\\s+SYSTEM_TIME|FOR\\s+BUSINESS_TIME|FOR\\s+SYSTEM_TIME\\s+AS\\s+OF|FOR\\s+BUSINESS_TIME\\s+AS\\s+OF|FROM\\s+SYSTEM_TIME|FROM\\s+BUSINESS_TIME|PERIOD\\s+SYSTEM_TIME|PERIOD\\s+BUSINESS_TIME|WITHOUT\\s+OVERLAPS|INCLUDING|EXCLUDING|HISTORY\\s+TABLE)\\b"
+        },
+        {
+          "name": "keyword.other.routine.db2",
+          "match": "\\b(?i:LANGUAGE\\s+(?:SQL|C|JAVA|CLR)|PARAMETER\\s+STYLE\\s+(?:SQL|GENERAL)|MODIFIES\\s+SQL\\s+DATA|READS\\s+SQL\\s+DATA|CONTAINS\\s+SQL|NO\\s+SQL|DETERMINISTIC|NOT\\s+DETERMINISTIC|NO\\s+EXTERNAL\\s+ACTION|EXTERNAL\\s+ACTION|CALLED\\s+ON\\s+NULL\\s+INPUT|RETURNS\\s+NULL\\s+ON\\s+NULL\\s+INPUT|DYNAMIC\\s+RESULT\\s+SETS|RESULT\\s+SETS|SPECIFIC|FENCED|NOT\\s+FENCED|THREADSAFE|NOT\\s+THREADSAFE|ALLOW\\s+PARALLEL|NO\\s+SQL)\\b"
+        },
+        {
+          "name": "keyword.other.identity.db2",
+          "match": "\\b(?i:GENERATED\\s+(?:ALWAYS|BY\\s+DEFAULT)|AS\\s+IDENTITY|START\\s+WITH|INCREMENT\\s+BY|MINVALUE|MAXVALUE|CYCLE|NO\\s+CYCLE|CACHE|NO\\s+CACHE|ORDER|NO\\s+ORDER)\\b"
+        },
+        {
+          "name": "keyword.other.constraint.db2",
+          "match": "\\b(?i:CONSTRAINT|PRIMARY\\s+KEY|FOREIGN\\s+KEY|REFERENCES|UNIQUE|CHECK|ON\\s+DELETE|ON\\s+UPDATE|CASCADE|RESTRICT|NO\\s+ACTION|SET\\s+NULL|SET\\s+DEFAULT|DEFERRABLE|NOT\\s+DEFERRABLE|ENFORCED|NOT\\s+ENFORCED|ENABLE|DISABLE)\\b"
+        },
+        {
+          "name": "keyword.other.procedural.db2",
+          "match": "\\b(?i:HANDLER|CONTINUE\\s+HANDLER|EXIT\\s+HANDLER|UNDO\\s+HANDLER|SQLWARNING|SQLEXCEPTION|NOT\\s+FOUND|SQLSTATE|SQLCODE|GET\\s+DIAGNOSTICS|STACKED\\s+DIAGNOSTICS|SIGNAL\\s+SQLSTATE|RESIGNAL|MESSAGE_TEXT|RETURNED_SQLSTATE|DB2_RETURNED_SQLCODE|ROW_COUNT)\\b"
+        },
+        {
+          "name": "keyword.other.temp.db2",
+          "match": "\\b(?i:DECLARE\\s+GLOBAL\\s+TEMPORARY|SESSION\\.|ON\\s+COMMIT\\s+(?:DELETE|PRESERVE)\\s+ROWS|NOT\\s+LOGGED|WITH\\s+REPLACE)\\b"
+        },
+        {
+          "name": "keyword.other.dynamic.db2",
+          "match": "\\b(?i:PREPARE|EXECUTE|EXECUTE\\s+IMMEDIATE|USING|INTO|DESCRIPTOR|SQLDA|DYNAMIC\\s+SQL)\\b"
+        },
+        {
+          "name": "keyword.other.merge.db2",
+          "match": "\\b(?i:MATCHED|NOT\\s+MATCHED|WHEN\\s+MATCHED|WHEN\\s+NOT\\s+MATCHED|MATCHED\\s+THEN|NOT\\s+MATCHED\\s+THEN)\\b"
+        },
+        {
+          "name": "keyword.other.lock.db2",
+          "match": "\\b(?i:FOR\\s+UPDATE|FOR\\s+READ\\s+ONLY|WITH\\s+RS|WITH\\s+RR|WITH\\s+CS|WITH\\s+UR|LOCK\\s+TABLE|LOCK\\s+SIZE|LOCK\\s+TIMEOUT)\\b"
+        }
+      ]
+    },
+    "clauses": {
+      "patterns": [
+        {
+          "name": "keyword.control.clause.db2",
+          "match": "\\b(?i:JOIN|INNER\\s+JOIN|LEFT(?:\\s+OUTER)?\\s+JOIN|RIGHT(?:\\s+OUTER)?\\s+JOIN|FULL(?:\\s+OUTER)?\\s+JOIN|CROSS\\s+JOIN|LATERAL|ON|USING|GROUP\\s+BY|ORDER\\s+BY|HAVING|WHERE|QUALIFY|UNION(?:\\s+ALL)?|INTERSECT(?:\\s+ALL)?|EXCEPT(?:\\s+ALL)?|FETCH|OFFSET|LIMIT|PARTITION\\s+BY|WINDOW|OVER|WITH)\\b"
+        },
+        {
+          "name": "keyword.other.recursive.db2",
+          "match": "\\b(?i:WITH\\s+RECURSIVE|SEARCH\\s+(?:DEPTH|BREADTH)\\s+FIRST\\s+BY|CYCLE)\\b"
+        },
+        {
+          "name": "keyword.other.table.db2",
+          "match": "\\b(?i:INCLUDING|EXCLUDING|LIKE|AS|DATA|DEFINITION\\s+ONLY|WITH\\s+NO\\s+DATA|WITH\\s+DATA|INHERIT|MATERIALIZED|NOT\\s+MATERIALIZED)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.comparison.db2", "match": "<>|!=|<=|>=|=|<|>" },
+        { "name": "keyword.operator.arithmetic.db2", "match": "\\+|-|\\*|/|%" },
+        { "name": "keyword.operator.concatenate.db2", "match": "\\|\\|" },
+        { "name": "keyword.operator.bitwise.db2", "match": "&|\\^|~" },
+        { "name": "punctuation.separator.comma.db2", "match": "," },
+        { "name": "punctuation.terminator.statement.db2", "match": ";" },
+        { "name": "punctuation.accessor.db2", "match": "\\." },
+        { "name": "meta.brackets.db2", "match": "[()]" }
+      ]
+    }
   }
 }

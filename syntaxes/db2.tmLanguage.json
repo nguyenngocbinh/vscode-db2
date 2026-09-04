@@ -1,0 +1,36 @@
+{
+  "name": "DB2 SQL",
+  "scopeName": "source.db2",
+  "patterns": [
+    {"include": "#comments"},
+    {"include": "#strings"},
+    {"include": "#numbers"},
+    {"include": "#keywords"},
+    {"include": "#types"},
+    {"include": "#functions"},
+    {"include": "#special"},
+    {"include": "#operators"}
+  ],
+  "repository": {
+    "comments": {"patterns": [
+      {"name": "comment.line.double-dash.db2", "match": "--.*$"},
+      {"name": "comment.block.db2", "begin": "/\\*", "end": "\\*/"}
+    ]},
+    "strings": {"patterns": [
+      {"name": "string.quoted.single.db2", "begin": "'", "end": "'", "patterns": [{"name": "constant.character.escape.db2", "match": "''"}]},
+      {"name": "string.quoted.double.db2", "begin": "\\\"", "end": "\\\""}
+    ]},
+    "numbers": {"patterns": [{"name": "constant.numeric.db2", "match": "\\b\\d+(\\.\\d+)?\\b"}]},
+    "keywords": {"patterns": [
+      {"name": "keyword.control.db2", "match": "\\b(?i:SELECT|FROM|WHERE|INSERT|INTO|VALUES|UPDATE|DELETE|MERGE|CREATE|ALTER|DROP|TRUNCATE|TABLE|VIEW|INDEX|PROCEDURE|FUNCTION|TRIGGER|WITH|AS|CASE|WHEN|THEN|ELSE|END|JOIN|INNER|LEFT|RIGHT|FULL|OUTER|CROSS|ON|GROUP|BY|ORDER|HAVING|UNION|ALL|DISTINCT|FETCH|FIRST|ROWS|ONLY|OFFSET|DECLARE|SET|CALL|RETURN|BEGIN|ATOMIC|COMMIT|ROLLBACK|GRANT|REVOKE)\\b"},
+      {"name": "keyword.operator.db2", "match": "\\b(?i:AND|OR|NOT|IN|IS|NULL|LIKE|BETWEEN|EXISTS|ASC|DESC)\\b"}
+    ]},
+    "types": {"patterns": [{"name": "storage.type.db2", "match": "\\b(?i:CHAR|VARCHAR|CLOB|BLOB|DECIMAL|NUMERIC|INTEGER|INT|BIGINT|SMALLINT|DATE|TIME|TIMESTAMP|REAL|DOUBLE|FLOAT|BOOLEAN|GRAPHIC|VARGRAPHIC|XML)\\b"}]},
+    "functions": {"patterns": [{"name": "support.function.db2", "match": "\\b(?i:COALESCE|NULLIF|CAST|DECIMAL|VARCHAR|CHAR|SUBSTR|SUBSTRING|TRIM|REPLACE|UPPER|LOWER|LENGTH|COUNT|SUM|AVG|MIN|MAX|ROW_NUMBER|RANK|DENSE_RANK|REGEXP_LIKE|REGEXP_REPLACE|VARCHAR_FORMAT|TIMESTAMP_FORMAT|DAYS|MONTHS|YEARS)\\b(?=\\s*\\()"}]},
+    "special": {"patterns": [
+      {"name": "constant.language.db2", "match": "\\b(?i:CURRENT_DATE|CURRENT_TIME|CURRENT_TIMESTAMP|CURRENT_USER|CURRENT_SCHEMA|CURRENT_PATH|CURRENT_SERVER|CURRENT_TIMEZONE|CURRENT_ROLE)\\b"},
+      {"name": "keyword.other.db2", "match": "\\b(?i:WITH\\s+UR|WITH\\s+CS|WITH\\s+RS|WITH\\s+RR|FETCH\\s+FIRST|OPTIMIZE\\s+FOR|DECLARE\\s+GLOBAL\\s+TEMPORARY|TEMPORARY|GENERATED\\s+(?:ALWAYS|BY\\s+DEFAULT)|IDENTITY|SIGNAL|RESIGNAL|GET\\s+DIAGNOSTICS|SQLCODE|SQLSTATE)\\b"}
+    ]},
+    "operators": {"patterns": [{"name": "keyword.operator.logical.db2", "match": "=|<>|!=|<=|>=|<|>|\\+|-|\\*|/|\\|\\|"}]}
+  }
+}

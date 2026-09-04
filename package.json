@@ -1,13 +1,35 @@
 {
   "name": "vscode-db2",
   "displayName": "DB2 SQL",
-  "description": "Syntax highlighting for IBM Db2 SQL files.",
-  "version": "0.1.0",
+  "description": "Deep DB2 SQL syntax highlighting for IBM Db2 development in Visual Studio Code.",
+  "version": "0.1.1",
   "publisher": "nguyenngocbinh",
   "license": "MIT",
-  "engines": { "vscode": "^1.80.0" },
-  "categories": ["Programming Languages"],
-  "keywords": ["db2", "ibm", "sql", "database"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nguyenngocbinh/vscode-db2.git"
+  },
+  "homepage": "https://github.com/nguyenngocbinh/vscode-db2",
+  "bugs": {
+    "url": "https://github.com/nguyenngocbinh/vscode-db2/issues"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "db2",
+    "ibm db2",
+    "ibm database",
+    "sql",
+    "database",
+    "db2 sql",
+    "ibm i",
+    "db2 for z/os",
+    "db2 for luW"
+  ],
   "contributes": {
     "languages": [{
       "id": "db2",

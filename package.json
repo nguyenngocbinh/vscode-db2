@@ -2,7 +2,7 @@
   "name": "vscode-db2",
   "displayName": "DB2 SQL",
   "description": "Deep DB2 SQL syntax highlighting for IBM Db2 development in Visual Studio Code.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "publisher": "nguyenngocbinh",
   "license": "MIT",
   "repository": {
@@ -28,7 +28,7 @@
     "db2 sql",
     "ibm i",
     "db2 for z/os",
-    "db2 for luW"
+    "db2 for luw"
   ],
   "contributes": {
     "languages": [{
@@ -41,6 +41,17 @@
       "language": "db2",
       "scopeName": "source.db2",
       "path": "./syntaxes/db2.tmLanguage.json"
+    }],
+    "snippets": [{
+      "language": "db2",
+      "path": "./snippets/db2.json"
     }]
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "latest"
   }
 }

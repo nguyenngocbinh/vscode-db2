@@ -1,0 +1,117 @@
+{
+  "DB2 SELECT": {
+    "prefix": "db2select",
+    "body": [
+      "SELECT ${1:*}",
+      "FROM ${2:SCHEMA.TABLE}",
+      "WHERE ${3:1 = 1}",
+      "WITH UR;"
+    ],
+    "description": "DB2 SELECT with uncommitted read"
+  },
+  "DB2 CTE": {
+    "prefix": "db2cte",
+    "body": [
+      "WITH ${1:cte_name} AS (",
+      "    SELECT ${2:*}",
+      "    FROM ${3:SCHEMA.TABLE}",
+      "    WHERE ${4:condition}",
+      ")",
+      "SELECT *",
+      "FROM ${1:cte_name};"
+    ],
+    "description": "DB2 common table expression"
+  },
+  "DB2 MERGE": {
+    "prefix": "db2merge",
+    "body": [
+      "MERGE INTO ${1:TARGET_TABLE} AS T",
+      "USING ${2:SOURCE_TABLE} AS S",
+      "ON T.${3:ID} = S.${3:ID}",
+      "WHEN MATCHED THEN",
+      "    UPDATE SET T.${4:COLUMN} = S.${4:COLUMN}",
+      "WHEN NOT MATCHED THEN",
+      "    INSERT (${3:ID}, ${4:COLUMN})",
+      "    VALUES (S.${3:ID}, S.${4:COLUMN});"
+    ],
+    "description": "DB2 MERGE statement"
+  },
+  "DB2 Procedure": {
+    "prefix": "db2proc",
+    "body": [
+      "CREATE OR REPLACE PROCEDURE ${1:SCHEMA.PROCEDURE_NAME} (",
+      "    IN ${2:P_ID} INTEGER",
+      ")",
+      "LANGUAGE SQL",
+      "MODIFIES SQL DATA",
+      "BEGIN ATOMIC",
+      "    ${3:-- procedure body}",
+      "END;"
+    ],
+    "description": "DB2 SQL procedure"
+  },
+  "DB2 Cursor": {
+    "prefix": "db2cursor",
+    "body": [
+      "DECLARE ${1:C1} CURSOR WITH HOLD FOR",
+      "    SELECT ${2:*}",
+      "    FROM ${3:SCHEMA.TABLE}",
+      "    WHERE ${4:condition};",
+      "",
+      "OPEN ${1:C1};",
+      "FETCH ${1:C1} INTO ${5:V_VALUE};",
+      "CLOSE ${1:C1};"
+    ],
+    "description": "DB2 cursor declaration and lifecycle"
+  },
+  "DB2 Handler": {
+    "prefix": "db2handler",
+    "body": [
+      "DECLARE CONTINUE HANDLER FOR SQLEXCEPTION",
+      "BEGIN",
+      "    GET DIAGNOSTICS EXCEPTION 1",
+      "        ${1:V_MESSAGE} = MESSAGE_TEXT;",
+      "END;"
+    ],
+    "description": "DB2 SQL exception handler"
+  },
+  "DB2 Signal": {
+    "prefix": "db2signal",
+    "body": [
+      "SIGNAL SQLSTATE '${1:75000}'",
+      "    SET MESSAGE_TEXT = '${2:Business error}';"
+    ],
+    "description": "DB2 SIGNAL SQLSTATE"
+  },
+  "DB2 Temporary Table": {
+    "prefix": "db2temp",
+    "body": [
+      "DECLARE GLOBAL TEMPORARY TABLE ${1:SESSION.TEMP_TABLE} (",
+      "    ${2:ID} INTEGER,",
+      "    ${3:VALUE} VARCHAR(255)",
+      ")",
+      "ON COMMIT PRESERVE ROWS",
+      "NOT LOGGED;"
+    ],
+    "description": "DB2 declared global temporary table"
+  },
+  "DB2 Window": {
+    "prefix": "db2window",
+    "body": [
+      "ROW_NUMBER() OVER (",
+      "    PARTITION BY ${1:GROUP_COLUMN}",
+      "    ORDER BY ${2:ORDER_COLUMN} DESC",
+      ") AS RN"
+    ],
+    "description": "DB2 window function"
+  },
+  "DB2 Temporal": {
+    "prefix": "db2temporal",
+    "body": [
+      "SELECT ${1:*}",
+      "FROM ${2:SCHEMA.TABLE}",
+      "FOR SYSTEM_TIME AS OF ${3:CURRENT_TIMESTAMP};"
+    ],
+    "description": "DB2 temporal query"
+  }
+}

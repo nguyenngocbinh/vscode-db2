@@ -1,0 +1,24 @@
+{
+  "name": "vscode-db2",
+  "displayName": "DB2 SQL",
+  "description": "Syntax highlighting for IBM Db2 SQL files.",
+  "version": "0.1.0",
+  "publisher": "nguyenngocbinh",
+  "license": "MIT",
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Programming Languages"],
+  "keywords": ["db2", "ibm", "sql", "database"],
+  "contributes": {
+    "languages": [{
+      "id": "db2",
+      "aliases": ["DB2", "db2"],
+      "extensions": [".db2"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "db2",
+      "scopeName": "source.db2",
+      "path": "./syntaxes/db2.tmLanguage.json"
+    }]
+  }
+}
